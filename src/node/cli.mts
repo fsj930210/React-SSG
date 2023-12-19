@@ -1,8 +1,9 @@
 import path from 'node:path';
 import { cac } from 'cac';
-import { createDevServer } from './dev';
+import { createDevServer } from './dev.mjs';
+import pkg from '../../package.json' assert { type: 'json' };
 
-const version = require('../../package.json').version;
+const version = pkg.version;
 
 // 使用cac来做脚手架命令行开发工具
 const cli = cac('react-ssg').version(version).help();
