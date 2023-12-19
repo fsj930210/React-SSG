@@ -1,6 +1,7 @@
-import path from 'node:path';
+import path, { resolve } from 'node:path';
 import { cac } from 'cac';
 import { createDevServer } from './dev.mjs';
+import { build } from './build.mjs';
 import pkg from '../../package.json' assert { type: 'json' };
 
 const version = pkg.version;
@@ -13,12 +14,18 @@ cli
 	.alias('dev')
 	.action(async (root: string) => {
 		console.log('dev', root);
-		root = root ? path.resolve(root) : process.cwd();
+		root = root ? resolve(root) : process.cwd();
 		const server = await createDevServer(root);
 		await server.listen();
 		server.printUrls();
 	});
 cli.command('build [root]', 'build for production').action(async (root: string) => {
 	console.log('build', root);
+	try {
+		root = resolve(root);
+		await build(root);
+	} catch (error) {
+		console.log(error);
+	}
 });
 cli.parse();
