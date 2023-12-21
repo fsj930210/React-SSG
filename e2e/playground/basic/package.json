@@ -1,0 +1,22 @@
+{
+  "name": "basic",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "react-ssg dev docs",
+    "build": "react-ssg build docs",
+    "preview": "react-ssg start docs"
+  },
+  "keywords": [],
+  "author": "fengshaojian123 <fsj930210@163.com>",
+  "license": "MIT",
+  "autorName": "fengshaojian",
+  "autorUrl": "https://www.github.com/fsj930210",
+  "dependencies": {
+    "react-ssg": "../../.."
+  }
+}
