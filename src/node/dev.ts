@@ -4,8 +4,8 @@ import { pluginIndexHtml } from './plugins/indexHtml';
 
 // 创建vite devserver
 export async function createDevServer(root = process.cwd()) {
-	return createViteDevServer({
-		root,
-		plugins: [pluginIndexHtml(), pluginReact()],
-	});
+  return createViteDevServer({
+    root,
+    plugins: [pluginIndexHtml(), pluginReact()]
+  });
 }
