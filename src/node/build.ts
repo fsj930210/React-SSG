@@ -1,8 +1,9 @@
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import fs from 'fs-extra';
 import { InlineConfig, build as viteBuild } from 'vite';
 import pluginReact from '@vitejs/plugin-react';
-import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants/index.mjs';
+import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants';
 import type { RollupOutput } from 'rollup';
 
 export async function bundle(root: string) {
@@ -38,7 +39,8 @@ export async function build(root: string = process.cwd()) {
 	const [clientBundle, serverBundle] = await bundle(root);
 	// 引入 ssr入口模块
 	const serverEntryPath = join(root, '.temp', 'server-entry.js');
-	const { render } = await import(serverEntryPath);
+	// 兼容windows系统
+	const { render } = await import(pathToFileURL(serverEntryPath).toString());
 	await renderPage(render, root, clientBundle);
 }
 

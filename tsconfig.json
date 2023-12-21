@@ -2,10 +2,10 @@
   "compilerOptions": {
     "outDir": "dist",
     "target": "ESNext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
-    "module": "NodeNext" /* Specify what module code is generated. */,
-    "rootDir": "src" /* Specify the root folder within your source files. */,
+    "module": "ESNext" /* Specify what module code is generated. */,
+    "rootDir": "." /* Specify the root folder within your source files. */,
     "esModuleInterop": true,
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
     "jsx": "react-jsx"
   }

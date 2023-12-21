@@ -7,7 +7,8 @@
     "react-ssg": "bin/react-ssg.js"
   },
   "scripts": {
-    "start": "tsc -w"
+    "start": "tsup --watch",
+    "build": "tsup"
   },
   "keywords": [],
   "author": "fengshaojian123 <fsj930210@163.com>",
@@ -15,13 +16,16 @@
   "autorName": "fengshaojian",
   "autorUrl": "https://www.github.com/fsj930210",
   "devDependencies": {
+    "@babel/preset-typescript": "^7.23.3",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.10.5",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
     "@vitejs/plugin-react": "^4.2.1",
+    "ora": "^7.0.1",
     "rollup": "^4.9.1",
     "serve": "^14.2.1",
+    "tsup": "^8.0.1",
     "typescript": "^5.3.3"
   },
   "dependencies": {

@@ -1,7 +1,7 @@
-import path, { resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { cac } from 'cac';
-import { createDevServer } from './dev.mjs';
-import { build } from './build.mjs';
+import { createDevServer } from './dev';
+import { build } from './build';
 import pkg from '../../package.json' assert { type: 'json' };
 
 const version = pkg.version;

@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { Plugin } from 'vite';
-import { CLIENT_ENTRY_PATH, DEFAULT_HTML_PATH } from '../constants/index.mjs';
+import { CLIENT_ENTRY_PATH, DEFAULT_HTML_PATH } from '../constants';
 export function pluginIndexHtml(): Plugin {
 	return {
 		name: 'react-ssg:index-html',
