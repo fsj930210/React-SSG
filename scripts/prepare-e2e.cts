@@ -1,6 +1,6 @@
 import path from 'path';
 import fse from 'fs-extra';
-import { execaCommandSync } from 'execa';
+import * as execa from 'execa';
 
 const exampleDir = path.resolve(__dirname, '../e2e/playground/basic');
 const defaultExecaOpts = {
@@ -14,19 +14,19 @@ async function prepareE2E() {
   // ensure after build
   if (!fse.existsSync(path.resolve(__dirname, '../dist'))) {
     // exec build command
-    execaCommandSync('pnpm build', {
+    execa.commandSync('pnpm build', {
       cwd: path.resolve(__dirname, '../')
     });
   }
 
-  execaCommandSync('npx playwright install', {
+  execa.commandSync('npx playwright install', {
     cwd: path.join(__dirname, '../'),
     stdout: process.stdout,
     stdin: process.stdin,
     stderr: process.stderr
   });
 
-  execaCommandSync('pnpm i', {
+  execa.commandSync('pnpm i', {
     cwd: exampleDir,
     stdout: process.stdout,
     stdin: process.stdin,
@@ -34,7 +34,7 @@ async function prepareE2E() {
   });
 
   // exec dev command
-  execaCommandSync('pnpm dev', defaultExecaOpts);
+  execa.commandSync('pnpm dev', defaultExecaOpts);
 }
 
 prepareE2E();

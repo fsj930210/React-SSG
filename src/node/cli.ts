@@ -2,18 +2,17 @@ import { resolve } from 'node:path';
 import { cac } from 'cac';
 import { createDevServer } from './dev';
 import { build } from './build';
-import pkg from '../../package.json' assert { type: 'json' };
+// import pkg from '../../package.json' assert { type: 'json' };
 
-const version = pkg.version;
+// const version = pkg.version;
 
 // 使用cac来做脚手架命令行开发工具
-const cli = cac('react-ssg').version(version).help();
+const cli = cac('react-ssg').version('0.0.1').help();
 
 cli
   .command('[root]', 'start dev server')
   .alias('dev')
   .action(async (root: string) => {
-    console.log('dev', root);
     root = root ? resolve(root) : process.cwd();
     const server = await createDevServer(root);
     await server.listen();
