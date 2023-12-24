@@ -20,7 +20,13 @@ module.exports = {
     quotes: ['error', 'single'],
     semi: ['error', 'always'],
     '@typescript-eslint/no-non-null-assertion': 'off',
-    'react/react-in-jsx-scope': 'off'
+    'react/react-in-jsx-scope': 'off',
+    'prettier/prettier': [
+      'error',
+      {
+        'endOfLine': 'auto'
+      }
+    ]
   },
   settings: {
     react: {

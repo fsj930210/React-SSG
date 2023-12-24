@@ -5,8 +5,12 @@
     "rootDir": ".",
     "target": "ESNext",
     "jsx": "react-jsx",
+    "baseUrl": "src",
     "moduleResolution": "node",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "shared/*": ["shared/*"]
+    }
   },
   "include": ["e2e/**/*.ts", "src/**/*.ts", "src/**/*.tsx"]
 }

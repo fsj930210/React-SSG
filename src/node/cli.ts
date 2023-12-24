@@ -13,10 +13,16 @@ cli
   .command('[root]', 'start dev server')
   .alias('dev')
   .action(async (root: string) => {
-    root = root ? resolve(root) : process.cwd();
-    const server = await createDevServer(root);
-    await server.listen();
-    server.printUrls();
+    const createServer = async () => {
+      root = root ? resolve(root) : process.cwd();
+      const server = await createDevServer(root, async () => {
+        await server.close();
+        await createServer();
+      });
+      await server.listen();
+      server.printUrls();
+    };
+    await createServer();
   });
 cli.command('build [root]', 'build for production').action(async (root: string) => {
   console.log('build', root);
