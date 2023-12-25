@@ -3,17 +3,24 @@ import { pathToFileURL } from 'node:url';
 import fs from 'fs-extra';
 import { InlineConfig, build as viteBuild } from 'vite';
 import pluginReact from '@vitejs/plugin-react';
-import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants';
 import type { RollupOutput } from 'rollup';
+import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants';
+import { SiteConfig } from 'shared/types';
+import { pluginConfig } from './plugins/config';
 
-export async function bundle(root: string) {
+
+export async function bundle(root: string, config: SiteConfig) {
   const resolveViteConfig = (isServer: boolean): InlineConfig => ({
     mode: 'production',
     root,
-    plugins: [pluginReact()],
+    plugins: [pluginReact(), pluginConfig(config)],
+    ssr: {
+      // 注意加上这个配置，防止 cjs 产物中 require ESM 的产物，因为 react-router-dom 的产物为 ESM 格式
+      noExternal: ['react-router-dom']
+    },
     build: {
       ssr: isServer,
-      outDir: isServer ? '.temp' : 'build',
+      outDir: isServer ? join(root, '.temp') : 'build',
       rollupOptions: {
         input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
         output: {
@@ -35,10 +42,10 @@ export async function bundle(root: string) {
     console.log(error);
   }
 }
-export async function build(root: string = process.cwd()) {
-  const [clientBundle] = await bundle(root);
+export async function build(root: string = process.cwd(), config: SiteConfig) {
+  const [clientBundle] = await bundle(root, config);
   // 引入 ssr入口模块
-  const serverEntryPath = join(root, '.temp', 'server-entry.js');
+  const serverEntryPath = join(root, '.temp', 'ServerEntry.js');
   // 兼容windows系统
   const { render } = await import(pathToFileURL(serverEntryPath).toString());
   await renderPage(render, root, clientBundle);

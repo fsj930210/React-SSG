@@ -1,10 +1,11 @@
-import { relative } from 'node:path';
+import { relative, join } from 'node:path';
 import { Plugin } from 'vite';
 import { SiteConfig } from '../../shared/types/index';
+import { PACKAGE_ROOT } from '../constants';
 
 const SITE_DATA_ID = 'react-ssg:site-data';
 
-export function pluginConfig(config: SiteConfig, restartServer: () => Promise<void>): Plugin {
+export function pluginConfig(config: SiteConfig, restartServer?: () => Promise<void>): Plugin {
   return {
     name: 'react-ssg:config',
     resolveId(id) {
@@ -32,8 +33,18 @@ export function pluginConfig(config: SiteConfig, restartServer: () => Promise<vo
         // 2. 手动调用 dev.ts 中的 createServer
         // 然后每次 import 新的产物
         // ✅ 可行
-        await restartServer();
+        await restartServer?.();
       }
-    }
+    },
+    config() {
+      return {
+        root: PACKAGE_ROOT,
+        resolve: {
+          alias: {
+            '@runtime': join(PACKAGE_ROOT, 'src', 'runtime', 'index.ts')
+          }
+        }
+      };
+    },
   };
 }

@@ -8,8 +8,13 @@ import { pluginConfig } from './plugins/config';
 export async function createDevServer(root = process.cwd(), restartServer: () => Promise<void>) {
   const config = await resolveConfig(root, 'serve', 'development');
   return createViteDevServer({
-    root,
-    plugins: [pluginIndexHtml(), pluginReact(), pluginConfig(config, restartServer)],
+    plugins: [
+      pluginIndexHtml(), 
+      pluginReact({
+      jsxRuntime: 'automatic'
+    }),
+     pluginConfig(config, restartServer)
+    ],
     server: {
       fs: {
         allow: [PACKAGE_ROOT]

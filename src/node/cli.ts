@@ -2,6 +2,7 @@ import { resolve } from 'node:path';
 import { cac } from 'cac';
 import { createDevServer } from './dev';
 import { build } from './build';
+import { resolveConfig } from './config';
 // import pkg from '../../package.json' assert { type: 'json' };
 
 // const version = pkg.version;
@@ -28,7 +29,8 @@ cli.command('build [root]', 'build for production').action(async (root: string) 
   console.log('build', root);
   try {
     root = resolve(root);
-    await build(root);
+    const config = await resolveConfig(root, 'build', 'production');
+    await build(root, config);
   } catch (error) {
     console.log(error);
   }
