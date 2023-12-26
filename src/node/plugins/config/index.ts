@@ -1,7 +1,7 @@
 import { relative, join } from 'node:path';
 import { Plugin } from 'vite';
-import { SiteConfig } from '../../shared/types/index';
-import { PACKAGE_ROOT } from '../constants';
+import { SiteConfig } from 'shared/types';
+import { PACKAGE_ROOT } from '../../constants';
 
 const SITE_DATA_ID = 'react-ssg:site-data';
 
@@ -45,6 +45,6 @@ export function pluginConfig(config: SiteConfig, restartServer?: () => Promise<v
           }
         }
       };
-    },
+    }
   };
 }
