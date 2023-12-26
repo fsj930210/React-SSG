@@ -12,5 +12,6 @@ export default defineConfig({
   outDir: 'dist',
   format: ['cjs', 'esm'],
   dts: true,
-  shims: true
+  shims: true,
+  clean: true
 });

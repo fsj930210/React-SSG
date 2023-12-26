@@ -4,16 +4,20 @@ import { pluginIndexHtml } from './plugins/indexHtml';
 import { PACKAGE_ROOT } from './constants';
 import { resolveConfig } from './config';
 import { pluginConfig } from './plugins/config';
+import { pluginRoutes } from './plugins/routes';
 // 创建vite devserver
 export async function createDevServer(root = process.cwd(), restartServer: () => Promise<void>) {
   const config = await resolveConfig(root, 'serve', 'development');
   return createViteDevServer({
     plugins: [
-      pluginIndexHtml(), 
+      pluginIndexHtml(),
       pluginReact({
-      jsxRuntime: 'automatic'
-    }),
-     pluginConfig(config, restartServer)
+        jsxRuntime: 'automatic'
+      }),
+      pluginConfig(config, restartServer),
+      pluginRoutes({
+        root: config.root
+      })
     ],
     server: {
       fs: {
