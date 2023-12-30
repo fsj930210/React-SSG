@@ -12,5 +12,5 @@
       "shared/*": ["shared/*"]
     }
   },
-  "include": ["e2e/**/*.ts", "src/**/*"]
+  "include": ["e2e/**/*.ts", "src/**/*.ts", "src/**/*.tsx"]
 }
