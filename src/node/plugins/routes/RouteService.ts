@@ -23,6 +23,7 @@ export class RouteService {
       })
       .sort();
     files.forEach((file) => {
+      console.log(file, 'file===================');
       const fileRelativePath = normalizePath(path.relative(this.#scanDir, file));
       // 1. 路由路径
       const routePath = this.normalizeRoutePath(fileRelativePath);
@@ -57,7 +58,8 @@ ${this.#routeData
 export const routes = [
   ${this.#routeData
     .map((route, index) => {
-      return `{ path: '${route.routePath}', element: React.createElement(Route${index}) }`;
+      return `{ path: '${route.routePath}', element: React.createElement(Route${index}), preload: () => import('${route.absolutePath}')}`;
+      // return `{ path: '${route.routePath}', element: React.createElement(Route${index}) }`;
     })
     .join(',\n')}
 ];
