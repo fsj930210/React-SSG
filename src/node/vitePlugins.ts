@@ -6,13 +6,15 @@ import { pluginConfig } from './plugins/config';
 import { pluginRoutes } from './plugins/routes';
 import { createPluginMdx } from './plugins/mdx';
 import { SiteConfig } from 'shared/types';
-
+import unocssOptions from './unocssOptions';
+import pluginUnocss from 'unocss/vite';
 export function createVitePlugins(
   config: SiteConfig,
   restartServer?: () => Promise<void>,
   isSSR = false
 ) {
   return [
+    pluginUnocss(unocssOptions),
     pluginIndexHtml(),
     pluginReact({
       jsxRuntime: 'automatic'

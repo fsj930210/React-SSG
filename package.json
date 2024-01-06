@@ -73,6 +73,7 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.0.0",
     "unified": "^11.0.4",
+    "unocss": "^0.58.2",
     "vite": "^3.2.1"
   }
 }
