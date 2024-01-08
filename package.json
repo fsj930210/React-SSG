@@ -28,6 +28,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
+    "@iconify-json/carbon": "^1.1.27",
     "@loadable/component": "^5.16.3",
     "@playwright/test": "^1.40.1",
     "@types/fs-extra": "^9.0.13",
@@ -48,6 +49,7 @@
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
     "rollup": "^3.2.3",
+    "sass": "^1.69.7",
     "serve": "^14.0.1",
     "tsup": "^6.5.0",
     "tsx": "^3.12.1",
