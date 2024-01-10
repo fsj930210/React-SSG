@@ -1,7 +1,9 @@
 import { relative, join } from 'node:path';
+import fs from 'fs-extra';
 import { Plugin } from 'vite';
 import { SiteConfig } from 'shared/types';
-import { PACKAGE_ROOT } from '../../constants';
+import sirv from 'sirv';
+import { PACKAGE_ROOT, PUBLIC_DIR } from '../../constants';
 
 const SITE_DATA_ID = 'react-ssg:site-data';
 
@@ -50,6 +52,12 @@ export function pluginConfig(config: SiteConfig, restartServer?: () => Promise<v
           }
         }
       };
+    },
+    configureServer(server) {
+      const publicDir = join(config.root, PUBLIC_DIR);
+      if (fs.pathExistsSync(publicDir)) {
+        server.middlewares.use(sirv(publicDir));
+      }
     }
   };
 }

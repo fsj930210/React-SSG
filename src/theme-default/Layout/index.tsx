@@ -1,6 +1,7 @@
 import { usePageData } from '../../runtime';
 import { Nav } from '../components/Nav';
 import { HomeLayout } from './HomeLayout';
+import { DocLayout } from './DocLayout';
 import 'uno.css';
 import '../styles/base.css';
 import '../styles/vars.css';
@@ -15,7 +16,7 @@ export function Layout() {
       case 'home':
         return <HomeLayout />;
       case 'doc':
-        return <div>Doc 页面</div>;
+        return <DocLayout />;
       default:
         return <div>404 页面</div>;
     }

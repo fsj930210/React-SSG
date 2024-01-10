@@ -16,3 +16,5 @@ export const CLIENT_ENTRY_PATH = join(RUNTIME_PATH, 'ClientEntry.tsx');
 export const SERVER_ENTRY_PATH = join(RUNTIME_PATH, 'ServerEntry.tsx');
 
 export const MD_REGEX = /\.mdx?$/;
+
+export const PUBLIC_DIR = 'public';

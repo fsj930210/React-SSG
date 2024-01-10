@@ -17,8 +17,8 @@ export function Nav() {
   const { siteData } = usePageData();
   const nav = siteData.themeConfig.nav || [];
   return (
-    <header fixed="~" pos="t-0 l-0" w="full">
-      <div flex="~" items="center" justify="between" className="px-8 h-14 divider-bottom">
+    <header fixed="~" pos="t-0 l-0" w="full" z="10">
+      <div flex="~" items="center" justify="between" className="h-14 divider-bottom">
         <div>
           <a
             href="/"
