@@ -33,6 +33,19 @@ export class RouteService {
       });
     });
   }
+  static getRoutePathFromFile(filePath: string, root: string): string | undefined {
+    const fileRelativePath = path.relative(root, filePath);
+    const routePath = RouteService.normalizeRoutePath(fileRelativePath);
+    return routePath;
+  }
+
+  static normalizeRoutePath(rawPath: string) {
+    const routePath = rawPath
+      .replace(/\.(.*)?$/, '')
+      .replace(/index$/, '')
+      .replaceAll('\\', '');
+    return routePath.startsWith('/') ? routePath : `/${routePath}`;
+  }
 
   // 获取路由数据，方便测试
   getRouteMeta(): RouteMeta[] {

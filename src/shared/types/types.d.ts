@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 declare module 'react-ssg:site-data' {
   import type { UserConfig } from 'shared/types';
   const siteData: UserConfig;
@@ -8,7 +9,7 @@ declare module 'react-ssg:routes' {
   export const routes: Route[];
 }
 
-declare module '*.module.scss' {
-  const classes: { [key: string]: string };
-  export default classes;
-}
+// declare module '*.module.scss' {
+//   const classes: { [key: string]: string };
+//   export default classes;
+// }
