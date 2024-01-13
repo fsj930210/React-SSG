@@ -31,7 +31,7 @@ export function pluginConfig(config: SiteConfig, restartServer?: () => Promise<v
         // 方案讨论:
         // 1. 插件内重启 Vite 的 dev server
         // await server.restart();
-        // ❌ 没有作用，因为并没有进行 Island 框架配置的重新读取
+        // ❌ 没有作用，因为并没有进行 react-ssg 框架配置的重新读取
         // 2. 手动调用 dev.ts 中的 createServer
         // 然后每次 import 新的产物
         // ✅ 可行

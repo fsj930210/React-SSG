@@ -23,7 +23,6 @@ export class RouteService {
       })
       .sort();
     files.forEach((file) => {
-      console.log(file, 'file===================');
       const fileRelativePath = normalizePath(path.relative(this.#scanDir, file));
       // 1. 路由路径
       const routePath = this.normalizeRoutePath(fileRelativePath);

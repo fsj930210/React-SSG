@@ -4,7 +4,6 @@ import path from 'node:path';
 
 describe('RouteService', async () => {
   const testDir = path.join(__dirname, 'fixtures').replace(/\\/g, '/');
-  console.log('============', testDir);
   const routeService = new RouteService(testDir);
   await routeService.init();
 
