@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './index.module.scss';
+import Styles from './index.module.scss';
 
 const EXTERNAL_URL_RE = /^https?/;
 
@@ -15,7 +15,7 @@ export function Link(props: LinkProps) {
   const target = isExternal ? '_blank' : '';
   const rel = isExternal ? 'noopener noreferrer' : undefined;
   return (
-    <a href={href} target={target} rel={rel} className={`${styles.link} ${className}`}>
+    <a href={href} target={target} rel={rel} className={`${Styles.link} ${className}`}>
       {children}
     </a>
   );

@@ -5,6 +5,7 @@ import { DocLayout } from './DocLayout';
 import 'uno.css';
 import '../styles/base.css';
 import '../styles/vars.css';
+import '../styles/doc.css';
 
 export function Layout() {
   const pageData = usePageData();
@@ -24,7 +25,13 @@ export function Layout() {
   return (
     <div>
       <Nav />
-      {getContent()}
+      <section
+        style={{
+          paddingTop: 'var(--react-ssg-nav-height)'
+        }}
+      >
+        {getContent()}
+      </section>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { Hero } from 'shared/types';
-import styles from './index.module.scss';
+import Styles from './index.module.scss';
 import { Button } from '../Button/index';
 export function HomeHero(props: { hero: Hero }) {
   const { hero } = props;
@@ -8,7 +8,7 @@ export function HomeHero(props: { hero: Hero }) {
       <div flex="~" className="max-w-1152px" m="auto">
         <div text="left" flex="~ col" className="max-w-592px">
           <h1 font="bold" text="6xl" className="max-w-576px">
-            <span className={styles.clip}>{hero.name}</span>
+            <span className={Styles.clip}>{hero.name}</span>
           </h1>
           <p text="6xl" font="bold" className="max-w-576px">
             {hero.text}

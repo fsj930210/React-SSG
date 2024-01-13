@@ -1,5 +1,5 @@
 import { SidebarGroup, SidebarItem } from 'shared/types';
-import styles from './index.module.scss';
+import Styles from './index.module.scss';
 import { Link } from '../Link/index';
 
 interface SidebarProps {
@@ -45,7 +45,7 @@ export function Sidebar(props: SidebarProps) {
   };
 
   return (
-    <aside className={styles.sidebar}>
+    <aside className={Styles.sidebar}>
       <nav>{sidebarData.map(renderGroup)}</nav>
     </aside>
   );

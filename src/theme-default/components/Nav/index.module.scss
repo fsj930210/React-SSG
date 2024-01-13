@@ -21,4 +21,5 @@
 .nav {
   padding-left: max(32px, calc(32px + (100vw - var(--react-ssg-layout-max-width)) / 2));
   padding-right: max(32px, calc(32px + (100vw - var(--react-ssg-layout-max-width)) / 2));
+  background-color: var(--react-ssg-c-bg);
 }
