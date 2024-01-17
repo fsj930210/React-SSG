@@ -28,7 +28,7 @@ export function DocLayout() {
           <DocFooter />
         </div>
         <div className={Styles.asideContainer}>
-          <Aside headers={toc} pagePath={pagePath} />
+          <Aside headers={toc} pagePath={pagePath} __react-ssg />
         </div>
       </div>
     </div>
