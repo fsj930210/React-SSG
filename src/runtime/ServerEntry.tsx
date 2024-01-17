@@ -6,13 +6,21 @@ import { DataContext } from './hooks';
 // For ssr component render
 export async function render(pagePath: string) {
   const pageData = await initPageData(pagePath);
-  return renderToString(
+  const { clearReactSsgData, data } = await import('./jsx-runtime');
+  const { reactSsgProps, reactSsgToPathMap } = data;
+  clearReactSsgData();
+  const appHtml = renderToString(
     <DataContext.Provider value={pageData}>
       <StaticRouter location={pagePath}>
         <App />
       </StaticRouter>
     </DataContext.Provider>
   );
+  return {
+    appHtml,
+    reactSsgProps,
+    reactSsgToPathMap
+  };
 }
 
 export { routes } from 'react-ssg:routes';

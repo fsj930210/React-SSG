@@ -1,4 +1,4 @@
-import { Header } from 'shared/types';
+import { Header, PropsWithReactSsg } from 'shared/types';
 import { useRef, useEffect } from 'react';
 import { bindingAsideScroll, scrollToTarget } from '../../logic/asideScroll';
 import { useHeaders } from '../../logic/useHeaders';
@@ -8,7 +8,7 @@ interface AsideProps {
   pagePath: string;
 }
 
-export function Aside(props: AsideProps) {
+export function Aside(props: AsideProps & PropsWithReactSsg) {
   const { headers: rawHeaders = [], pagePath } = props;
   const headers = useHeaders(rawHeaders, pagePath);
   // 是否展示大纲栏

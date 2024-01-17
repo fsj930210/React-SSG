@@ -95,3 +95,6 @@ export interface Hero {
     theme: 'brand' | 'alt';
   }[];
 }
+export type PropsWithReactSsg = {
+  __reactSsg__?: boolean;
+};

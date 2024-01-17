@@ -3,7 +3,7 @@ import { SwitchAppearance } from '../SwitchAppearance';
 import { usePageData } from '@runtime';
 import Styles from './index.module.scss';
 
-export function MenuItem(item: NavItemWithLink) {
+export function MenuItem({ item }: { item: NavItemWithLink }) {
   return (
     <div className="text-sm font-medium mx-3">
       <a href={item.link} className={Styles.link}>
@@ -32,7 +32,7 @@ export function Nav() {
           {/* 普通菜单 */}
           <div flex="~">
             {nav.map((item) => (
-              <MenuItem {...item} key={item.text} />
+              <MenuItem item={item} key={item.text} />
             ))}
           </div>
 
