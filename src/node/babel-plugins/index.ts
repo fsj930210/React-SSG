@@ -34,7 +34,7 @@ export default declare((api) => {
         const attributes = (path.container as t.JSXElement).openingElement.attributes;
         for (let i = 0; i < attributes.length; i++) {
           const name = (attributes[i] as t.JSXAttribute).name;
-          if (name?.name === '__react-ssg') {
+          if (name?.name === '__reactSsg__') {
             (attributes[i] as t.JSXAttribute).value = t.stringLiteral(
               `${source.value}${MASK_SPLITTER}${normalizePath(state.filename || '')}`
             );

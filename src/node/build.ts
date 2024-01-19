@@ -3,10 +3,11 @@ import { pathToFileURL } from 'node:url';
 import fs from 'fs-extra';
 import { InlineConfig, build as viteBuild } from 'vite';
 import type { RollupOutput } from 'rollup';
-import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants';
+import { CLIENT_ENTRY_PATH, MASK_SPLITTER, SERVER_ENTRY_PATH } from './constants';
 import { SiteConfig } from 'shared/types';
 import { createVitePlugins } from './vitePlugins';
 import { Route } from './plugins/routes';
+import { RenderResult } from 'runtime/ServerEntry';
 
 export async function bundle(root: string, config: SiteConfig) {
   const resolveViteConfig = async (isServer: boolean): Promise<InlineConfig> => ({
@@ -51,7 +52,7 @@ export async function build(root: string = process.cwd(), config: SiteConfig) {
 }
 
 export async function renderPage(
-  render: (url: string) => string,
+  render: (url: string) => RenderResult,
   routes: Route[],
   root: string,
   clientBundle: RollupOutput
@@ -61,7 +62,8 @@ export async function renderPage(
   return Promise.all(
     routes.map(async (route) => {
       const { path: routePath } = route;
-      const appHtml = await render(routePath);
+      const { appHtml, propsData, reactSsgToPathMap } = await render(routePath);
+      await buildReactSsg(root, reactSsgToPathMap);
       const html = `
 <!DOCTYPE html>
 <html>
@@ -81,4 +83,57 @@ export async function renderPage(
       await fs.remove(join(root, '.temp'));
     })
   );
+}
+async function buildReactSsg(root: string, reactSsgPathToMap: Record<string, string>) {
+  // 根据 reactSsgPathToMap 拼接模块代码内容
+  const reactSsgInjectCode = `
+    ${Object.entries(reactSsgPathToMap)
+      .map(([reactSsgName, ReactSsgPath]) => `import { ${reactSsgName} } from '${ReactSsgPath}'`)
+      .join('')}
+window.REACTSSG = { ${Object.keys(reactSsgPathToMap).join(', ')} };
+window.REACTSSG_PROPS = JSON.parse(
+  document.getElementById('reactSsg-props').textContent
+);
+  `;
+  const injectId = 'reactSsg:inject';
+  return viteBuild({
+    mode: 'production',
+    build: {
+      // 输出目录
+      outDir: join(root, '.temp'),
+      rollupOptions: {
+        input: injectId
+      }
+    },
+    plugins: [
+      // 重点插件，用来加载我们拼接的 ReactSsg 注册模块的代码
+      {
+        name: 'reactSsg:inject',
+        enforce: 'post',
+        resolveId(id) {
+          if (id.includes(MASK_SPLITTER)) {
+            const [originId, importer] = id.split(MASK_SPLITTER);
+            return this.resolve(originId, importer, { skipSelf: true });
+          }
+
+          if (id === injectId) {
+            return id;
+          }
+        },
+        load(id) {
+          if (id === injectId) {
+            return reactSsgInjectCode;
+          }
+        },
+        // 对于 Islands Bundle，我们只需要 JS 即可，其它资源文件可以删除
+        generateBundle(_, bundle) {
+          for (const name in bundle) {
+            if (bundle[name].type === 'asset') {
+              delete bundle[name];
+            }
+          }
+        }
+      }
+    ]
+  });
 }
