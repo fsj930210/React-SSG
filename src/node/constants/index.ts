@@ -22,3 +22,5 @@ export const PUBLIC_DIR = 'public';
 export const MASK_SPLITTER = '!!REACT-SSG!!';
 
 export const CLIENT_OUTPUT = 'build';
+
+export const EXTERNALS = ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime'];

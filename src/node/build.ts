@@ -3,7 +3,14 @@ import { pathToFileURL } from 'node:url';
 import fs from 'fs-extra';
 import { InlineConfig, build as viteBuild } from 'vite';
 import type { RollupOutput } from 'rollup';
-import { CLIENT_ENTRY_PATH, CLIENT_OUTPUT, MASK_SPLITTER, SERVER_ENTRY_PATH } from './constants';
+import {
+  CLIENT_ENTRY_PATH,
+  CLIENT_OUTPUT,
+  EXTERNALS,
+  MASK_SPLITTER,
+  PACKAGE_ROOT,
+  SERVER_ENTRY_PATH
+} from './constants';
 import { SiteConfig } from 'shared/types';
 import { createVitePlugins } from './vitePlugins';
 import { Route } from './plugins/routes';
@@ -25,7 +32,8 @@ export async function bundle(root: string, config: SiteConfig) {
         input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
         output: {
           format: isServer ? 'cjs' : 'esm'
-        }
+        },
+        external: EXTERNALS
       }
     }
   });
@@ -41,6 +49,7 @@ export async function bundle(root: string, config: SiteConfig) {
     if (fs.pathExistsSync(publicDir)) {
       await fs.copy(publicDir, join(root, CLIENT_OUTPUT));
     }
+    await fs.copy(join(PACKAGE_ROOT, 'vendors'), join(root, CLIENT_OUTPUT));
     return [clientBundle, serverBundle] as [RollupOutput, RollupOutput];
   } catch (error) {
     console.log(error);
@@ -66,7 +75,7 @@ export async function renderPage(
   return Promise.all(
     routes.map(async (route) => {
       const { path: routePath } = route;
-      const { appHtml, propsData, reactSsgToPathMap } = await render(routePath);
+      const { appHtml, reactSsgProps, reactSsgToPathMap } = await render(routePath);
       const styleAssets = clientBundle.output.filter(
         (chunk) => chunk.type === 'asset' && chunk.fileName.endsWith('.css')
       );
@@ -82,12 +91,19 @@ export async function renderPage(
     <title>title</title>
     <meta name="description" content="xxx">
     ${styleAssets.map((item) => `<link rel="stylesheet" href="/${item.fileName}">`).join('\n')}
+    <script type="importmap">
+    {
+      "imports": {
+        ${EXTERNALS.map((name) => `"${name}": "/${normalizeVendorFilename(name)}"`).join(',')}
+      }
+    }
+  </script>
   </head>
   <body>
     <div id="root">${appHtml}</div>
     <script type="module">${reactSsgCode}</script>
     <script type="module" src="/${clientChunk?.fileName}"></script>
-    <script id="reactSsg-props">${JSON.stringify(propsData)}</script>
+    <script id="reactSsg-props">${JSON.stringify(reactSsgProps)}</script>
   </body>
 </html>`.trim();
       await fs.ensureDir(join(root, CLIENT_OUTPUT));
@@ -110,11 +126,15 @@ window.REACTSSG_PROPS = JSON.parse(
   const injectId = 'reactSsg:inject';
   return viteBuild({
     mode: 'production',
+    esbuild: {
+      jsx: 'automatic'
+    },
     build: {
       // 输出目录
       outDir: join(root, '.temp'),
       rollupOptions: {
-        input: injectId
+        input: injectId,
+        external: EXTERNALS
       }
     },
     plugins: [
@@ -149,3 +169,4 @@ window.REACTSSG_PROPS = JSON.parse(
     ]
   });
 }
+const normalizeVendorFilename = (fileName: string) => fileName.replace(/\//g, '_') + '.js';

@@ -5,7 +5,7 @@ import { DataContext } from './hooks';
 
 export interface RenderResult {
   appHtml: string;
-  propsData: unknown[];
+  reactSsgProps: unknown[];
   reactSsgToPathMap: Record<string, string>;
 }
 
