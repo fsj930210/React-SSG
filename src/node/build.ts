@@ -3,7 +3,7 @@ import { pathToFileURL } from 'node:url';
 import fs from 'fs-extra';
 import { InlineConfig, build as viteBuild } from 'vite';
 import type { RollupOutput } from 'rollup';
-import { CLIENT_ENTRY_PATH, MASK_SPLITTER, SERVER_ENTRY_PATH } from './constants';
+import { CLIENT_ENTRY_PATH, CLIENT_OUTPUT, MASK_SPLITTER, SERVER_ENTRY_PATH } from './constants';
 import { SiteConfig } from 'shared/types';
 import { createVitePlugins } from './vitePlugins';
 import { Route } from './plugins/routes';
@@ -20,7 +20,7 @@ export async function bundle(root: string, config: SiteConfig) {
     },
     build: {
       ssr: isServer,
-      outDir: isServer ? join(root, '.temp') : join(root, 'build'),
+      outDir: isServer ? join(root, '.temp') : join(root, CLIENT_OUTPUT),
       rollupOptions: {
         input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
         output: {
@@ -37,6 +37,10 @@ export async function bundle(root: string, config: SiteConfig) {
       // server build
       viteBuild(await resolveViteConfig(true))
     ]);
+    const publicDir = join(root, 'public');
+    if (fs.pathExistsSync(publicDir)) {
+      await fs.copy(publicDir, join(root, CLIENT_OUTPUT));
+    }
     return [clientBundle, serverBundle] as [RollupOutput, RollupOutput];
   } catch (error) {
     console.log(error);
@@ -63,6 +67,11 @@ export async function renderPage(
     routes.map(async (route) => {
       const { path: routePath } = route;
       const { appHtml, propsData, reactSsgToPathMap } = await render(routePath);
+      const styleAssets = clientBundle.output.filter(
+        (chunk) => chunk.type === 'asset' && chunk.fileName.endsWith('.css')
+      );
+      const reactSsgBundle = await buildReactSsg(root, reactSsgToPathMap);
+      const reactSsgCode = (reactSsgBundle as RollupOutput).output[0].code;
       await buildReactSsg(root, reactSsgToPathMap);
       const html = `
 <!DOCTYPE html>
@@ -72,15 +81,18 @@ export async function renderPage(
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>title</title>
     <meta name="description" content="xxx">
+    ${styleAssets.map((item) => `<link rel="stylesheet" href="/${item.fileName}">`).join('\n')}
   </head>
   <body>
     <div id="root">${appHtml}</div>
+    <script type="module">${reactSsgCode}</script>
     <script type="module" src="/${clientChunk?.fileName}"></script>
+    <script id="reactSsg-props">${JSON.stringify(propsData)}</script>
   </body>
 </html>`.trim();
-      await fs.ensureDir(join(root, 'build'));
+      await fs.ensureDir(join(root, CLIENT_OUTPUT));
       await fs.writeFile(join(root, 'build/index.html'), html);
-      await fs.remove(join(root, '.temp'));
+      // await fs.remove(join(root, '.temp'));
     })
   );
 }

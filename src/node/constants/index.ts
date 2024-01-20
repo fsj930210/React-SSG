@@ -20,3 +20,5 @@ export const MD_REGEX = /\.mdx?$/;
 export const PUBLIC_DIR = 'public';
 
 export const MASK_SPLITTER = '!!REACT-SSG!!';
+
+export const CLIENT_OUTPUT = 'build';
