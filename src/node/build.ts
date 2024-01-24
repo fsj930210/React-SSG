@@ -1,4 +1,4 @@
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import fs from 'fs-extra';
 import { InlineConfig, build as viteBuild } from 'vite';
@@ -74,7 +74,12 @@ export async function renderPage(
   const clientChunk = clientBundle.output.find((chunk) => chunk.type === 'chunk' && chunk.isEntry);
   console.log('Rendering page in server side...');
   return Promise.all(
-    routes.map(async (route) => {
+    [
+      ...routes,
+      {
+        path: '/404'
+      }
+    ].map(async (route) => {
       const { path: routePath } = route;
       const helmetContext = {
         context: {}
@@ -115,8 +120,11 @@ export async function renderPage(
     <script id="reactSsg-props">${JSON.stringify(reactSsgProps)}</script>
   </body>
 </html>`.trim();
-      await fs.ensureDir(join(root, CLIENT_OUTPUT));
-      await fs.writeFile(join(root, 'build/index.html'), html);
+      const fileName = routePath.endsWith('/') ? `${routePath}index.html` : `${routePath}.html`;
+      await fs.ensureDir(join(root, 'build', dirname(fileName)));
+      await fs.writeFile(join(root, 'build', fileName), html);
+      // await fs.ensureDir(join(root, CLIENT_OUTPUT));
+      // await fs.writeFile(join(root, 'build/index.html'), html);
       // await fs.remove(join(root, '.temp'));
     })
   );

@@ -3,6 +3,7 @@ import { cac } from 'cac';
 import { createDevServer } from './dev';
 import { build } from './build';
 import { resolveConfig } from './config';
+import { preview } from './preview';
 // import pkg from '../../package.json' assert { type: 'json' };
 
 // const version = pkg.version;
@@ -35,4 +36,15 @@ cli.command('build [root]', 'build for production').action(async (root: string) 
     console.log(error);
   }
 });
+cli
+  .command('preview [root]', 'preview production build')
+  .option('--port <port>', 'port to use for preview server')
+  .action(async (root: string, { port }: { port: number }) => {
+    try {
+      root = resolve(root);
+      await preview(root, { port });
+    } catch (e) {
+      console.log(e);
+    }
+  });
 cli.parse();
