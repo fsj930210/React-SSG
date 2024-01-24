@@ -15,6 +15,7 @@ import { SiteConfig } from 'shared/types';
 import { createVitePlugins } from './vitePlugins';
 import { Route } from './plugins/routes';
 import { RenderResult } from 'runtime/ServerEntry';
+import { HelmetData } from 'react-helmet-async';
 
 export async function bundle(root: string, config: SiteConfig) {
   const resolveViteConfig = async (isServer: boolean): Promise<InlineConfig> => ({
@@ -65,7 +66,7 @@ export async function build(root: string = process.cwd(), config: SiteConfig) {
 }
 
 export async function renderPage(
-  render: (url: string) => RenderResult,
+  render: (url: string, elmetContext: object) => Promise<RenderResult>,
   routes: Route[],
   root: string,
   clientBundle: RollupOutput
@@ -75,13 +76,17 @@ export async function renderPage(
   return Promise.all(
     routes.map(async (route) => {
       const { path: routePath } = route;
-      const { appHtml, reactSsgProps, reactSsgToPathMap } = await render(routePath);
+      const helmetContext = {
+        context: {}
+      } as HelmetData;
+      const { appHtml, reactSsgProps, reactSsgToPathMap } = await render(routePath, helmetContext);
       const styleAssets = clientBundle.output.filter(
         (chunk) => chunk.type === 'asset' && chunk.fileName.endsWith('.css')
       );
       const reactSsgBundle = await buildReactSsg(root, reactSsgToPathMap);
       const reactSsgCode = (reactSsgBundle as RollupOutput).output[0].code;
       await buildReactSsg(root, reactSsgToPathMap);
+      const { helmet } = helmetContext.context;
       const html = `
 <!DOCTYPE html>
 <html>
@@ -89,6 +94,10 @@ export async function renderPage(
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>title</title>
+    ${helmet?.title?.toString() || ''}
+    ${helmet?.meta?.toString() || ''}
+    ${helmet?.link?.toString() || ''}
+    ${helmet?.style?.toString() || ''}
     <meta name="description" content="xxx">
     ${styleAssets.map((item) => `<link rel="stylesheet" href="/${item.fileName}">`).join('\n')}
     <script type="importmap">
