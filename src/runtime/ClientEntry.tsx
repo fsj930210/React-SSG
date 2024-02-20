@@ -30,13 +30,13 @@ async function renderInBrowser() {
     );
   } else {
     // 生产环境下的 Partial Hydration
-    const reactSsg = document.querySelectorAll('[__reactSsg__]');
+    const reactSsg = document.querySelectorAll('[__reactSsg]');
     if (reactSsg.length === 0) {
       return;
     }
     for (const ssg of reactSsg) {
       // Aside:0
-      const [id, index] = ssg.getAttribute('__reactSsg__').split(':');
+      const [id, index] = ssg.getAttribute('__reactSsg').split(':');
       const Element = window.REACTSSG[id] as ComponentType<unknown>;
       hydrateRoot(ssg, <Element {...window.REACTSSG_PROPS[index]} />);
     }

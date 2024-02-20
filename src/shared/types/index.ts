@@ -34,11 +34,13 @@ export interface UserConfig {
   title?: string;
   description?: string;
   themeConfig?: ThemeConfig;
+  base?: string;
   vite?: ViteConfiguration;
 }
 export interface SiteConfig {
   root: string;
   configPath: string;
+  base?: string;
   siteData: UserConfig;
 }
 export type PageType = 'home' | 'doc' | 'custom' | '404';
@@ -98,5 +100,5 @@ export interface Hero {
   }[];
 }
 export type PropsWithReactSsg = {
-  __reactSsg__?: boolean;
+  __reactSsg?: boolean;
 };

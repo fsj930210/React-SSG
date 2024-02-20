@@ -1,7 +1,5 @@
-import React from 'react';
+import React from 'react'
 
-function A() {
-  return <div>Hello, route A</div>;
+export default function A() {
+	return <div>Hello Page A</div>
 }
-
-export default A;

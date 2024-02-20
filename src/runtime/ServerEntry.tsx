@@ -14,9 +14,9 @@ export interface RenderResult {
 export async function render(pagePath: string, helmetContext: object) {
   const pageData = await initPageData(pagePath);
   const { clearReactSsgData, data } = await import('./jsx-runtime');
-
-  const { reactSsgProps, reactSsgToPathMap } = data;
   clearReactSsgData();
+  const { reactSsgProps, reactSsgToPathMap } = data;
+
   const appHtml = renderToString(
     <HelmetProvider context={helmetContext}>
       <DataContext.Provider value={pageData}>

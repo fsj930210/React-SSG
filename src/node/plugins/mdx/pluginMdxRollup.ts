@@ -14,14 +14,16 @@ export async function pluginMdxRollup(): Promise<Plugin> {
   return pluginMdx({
     remarkPlugins: [
       remarkPluginGFM,
+      remarkPluginToc,
       remarkPluginFrontmatter,
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      [remarkPluginMDXFrontMatter, { name: 'frontmatter' }],
-      remarkPluginToc
+      [remarkPluginMDXFrontMatter, { name: 'frontmatter' }]
     ],
     rehypePlugins: [
       rehypePluginSlug,
+      rehypePluginPreWrapper,
+      [rehypePluginShiki, { highlighter: await shiki.getHighlighter({ theme: 'nord' }) }],
       [
         rehypePluginAutolinkHeadings,
         {
@@ -33,9 +35,7 @@ export async function pluginMdxRollup(): Promise<Plugin> {
             value: '#'
           }
         }
-      ],
-      rehypePluginPreWrapper,
-      [rehypePluginShiki, { highlighter: await shiki.getHighlighter({ theme: 'nord' }) }]
+      ]
     ]
   }) as unknown as Plugin;
 }

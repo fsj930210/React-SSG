@@ -67,6 +67,7 @@ export async function resolveConfig(
   const siteConfig: SiteConfig = {
     root,
     configPath: configPath,
+    base: userConfig.base,
     siteData: resolveSiteData(userConfig as UserConfig)
   };
   return siteConfig;

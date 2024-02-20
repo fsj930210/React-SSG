@@ -16,7 +16,6 @@ export function DocLayout() {
   });
 
   const matchedSidebar = sidebarData[matchedSidebarKey] || [];
-
   return (
     <div>
       <Sidebar sidebarData={matchedSidebar} pathname={pathname} />
@@ -28,7 +27,7 @@ export function DocLayout() {
           <DocFooter />
         </div>
         <div className={Styles.asideContainer}>
-          <Aside headers={toc} pagePath={pagePath} __reactSsg__ />
+          <Aside headers={toc} pagePath={pagePath} __reactSsg />
         </div>
       </div>
     </div>

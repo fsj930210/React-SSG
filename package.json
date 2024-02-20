@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsup --watch",
-    "preview": "cd build && serve .",
+    "preview": "cd docs/build && serve .",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx ./",
     "lint:fix": "eslint --fix --ext .ts,.tsx,.js,.jsx --quiet ./",
     "prepare": "husky install",
@@ -84,7 +84,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet-async": "1.3.0",
-    "react-router-dom": "^6.21.1",
+    "react-router-dom": "^6.4.5",
     "rehype": "^13.0.1",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",

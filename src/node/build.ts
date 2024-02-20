@@ -72,8 +72,11 @@ export async function renderPage(
   clientBundle: RollupOutput
 ) {
   const clientChunk = clientBundle.output.find((chunk) => chunk.type === 'chunk' && chunk.isEntry);
+  const styleAssets = clientBundle.output.filter(
+    (chunk) => chunk.type === 'asset' && chunk.fileName.endsWith('.css')
+  );
   console.log('Rendering page in server side...');
-  return Promise.all(
+  await Promise.all(
     [
       ...routes,
       {
@@ -85,12 +88,9 @@ export async function renderPage(
         context: {}
       } as HelmetData;
       const { appHtml, reactSsgProps, reactSsgToPathMap } = await render(routePath, helmetContext);
-      const styleAssets = clientBundle.output.filter(
-        (chunk) => chunk.type === 'asset' && chunk.fileName.endsWith('.css')
-      );
       const reactSsgBundle = await buildReactSsg(root, reactSsgToPathMap);
       const reactSsgCode = (reactSsgBundle as RollupOutput).output[0].code;
-      await buildReactSsg(root, reactSsgToPathMap);
+      // await buildReactSsg(root, reactSsgToPathMap);
       const { helmet } = helmetContext.context;
       const html = `
 <!DOCTYPE html>
@@ -128,12 +128,13 @@ export async function renderPage(
       // await fs.remove(join(root, '.temp'));
     })
   );
+  await fs.remove(join(root, '.temp'));
 }
 async function buildReactSsg(root: string, reactSsgPathToMap: Record<string, string>) {
   // 根据 reactSsgPathToMap 拼接模块代码内容
   const reactSsgInjectCode = `
     ${Object.entries(reactSsgPathToMap)
-      .map(([reactSsgName, ReactSsgPath]) => `import { ${reactSsgName} } from '${ReactSsgPath}'`)
+      .map(([reactSsgName, ReactSsgPath]) => `import { ${reactSsgName} } from '${ReactSsgPath}';`)
       .join('')}
 window.REACTSSG = { ${Object.keys(reactSsgPathToMap).join(', ')} };
 window.REACTSSG_PROPS = JSON.parse(

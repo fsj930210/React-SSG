@@ -1,4 +1,5 @@
 // 逻辑部分待补充
+import { PropsWithReactSsg } from 'shared/types';
 import { toggle } from '../../logic/toggleAppearance';
 import Styles from './index.module.scss';
 
@@ -25,7 +26,8 @@ export function Switch(props: SwitchProps) {
   );
 }
 
-export function SwitchAppearance() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function SwitchAppearance(props: PropsWithReactSsg) {
   return (
     <Switch onClick={toggle}>
       <div className={Styles.sun}>

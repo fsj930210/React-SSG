@@ -11,12 +11,12 @@ export default defineConfig({
       },
       {
         text: '指南',
-        link: '/guide/'
+        link: '/guide'
       },
     ],
     // 新增 sidebar 的内容
     sidebar: {
-      '/guide/': [
+      '/guide': [
         {
           text: '教程',
           items: [

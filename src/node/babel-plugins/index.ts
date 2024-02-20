@@ -9,8 +9,8 @@ export default declare((api) => {
   api.assertVersion(7);
 
   const visitor: Visitor<PluginPass> = {
-    // <A __react-ssg>
-    // <A.B __react-ssg>
+    // <A __reactSsg>
+    // <A.B __reactSsg>
     JSXOpeningElement(path, state) {
       const name = path.node.name;
       let bindingName = '';
@@ -34,7 +34,7 @@ export default declare((api) => {
         const attributes = (path.container as t.JSXElement).openingElement.attributes;
         for (let i = 0; i < attributes.length; i++) {
           const name = (attributes[i] as t.JSXAttribute).name;
-          if (name?.name === '__reactSsg__') {
+          if (name?.name === '__reactSsg') {
             (attributes[i] as t.JSXAttribute).value = t.stringLiteral(
               `${source.value}${MASK_SPLITTER}${normalizePath(state.filename || '')}`
             );
@@ -45,7 +45,7 @@ export default declare((api) => {
   };
 
   return {
-    name: 'transform-jsx-react-ssg',
+    name: 'transform-jsx-reactSsg',
     visitor
   };
 });

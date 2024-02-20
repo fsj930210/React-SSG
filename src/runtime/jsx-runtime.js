@@ -15,15 +15,16 @@ export const clearReactSsgData = () => {
 };
 
 const internalJsx = (jsx, type, props, ...args) => {
-  // 如果发现有 __reactSsg__ 这个 prop，则视为一个 ReactSsg 组件，记录下来
-  if (props && props.__reactSsg__) {
+  // 如果发现有 __reactSsg 这个 prop，则视为一个 ReactSsg 组件，记录下来
+  if (props && props.__reactSsg) {
     data.reactSsgProps.push(props);
     const id = type.name;
-    data['reactSsgToPathMap'][id] = props.__reactSsg__;
+    data['reactSsgToPathMap'][id] = props.__reactSsg;
 
-    delete props.__reactSsg__;
+    // delete props.__reactSsg;
+    Reflect.deleteProperty(props, '__reactSsg');
     return jsx('div', {
-      __reactSsg__: `${id}:${data.reactSsgProps.length - 1}`,
+      __reactSsg: `${id}:${data.reactSsgProps.length - 1}`,
       children: jsx(type, props, ...args)
     });
   }

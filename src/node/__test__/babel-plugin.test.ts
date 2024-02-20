@@ -18,22 +18,22 @@ describe('babel-plugin-react-ssg', () => {
   };
 
   test('Should compile jsx identifier', async () => {
-    const code = `import Aside from '${REACTSSG_PATH}'; export default function App() { return <Aside __reactSsg__ />; }`;
+    const code = `import Aside from '${REACTSSG_PATH}'; export default function App() { return <Aside __reactSsg />; }`;
 
     const result = await transformAsync(code, babelOptions);
 
     expect(result?.code).toContain(
-      `__reactSsg__: "${REACTSSG_PATH}${MASK_SPLITTER}${IMPORTER_PATH}"`
+      `__reactSsg: "${REACTSSG_PATH}${MASK_SPLITTER}${IMPORTER_PATH}"`
     );
   });
 
   test('Should compile jsx member expression', async () => {
-    const code = `import A from '${REACTSSG_PATH}'; export default function App() { return <A.B __reactSsg__ />; }`;
+    const code = `import A from '${REACTSSG_PATH}'; export default function App() { return <A.B __reactSsg />; }`;
 
     const result = await transformAsync(code, babelOptions);
 
     expect(result?.code).toContain(
-      `__reactSsg__: "${REACTSSG_PATH}${MASK_SPLITTER}${IMPORTER_PATH}"`
+      `__reactSsg: "${REACTSSG_PATH}${MASK_SPLITTER}${IMPORTER_PATH}"`
     );
   });
 });

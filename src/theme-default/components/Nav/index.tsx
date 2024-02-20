@@ -38,7 +38,7 @@ export function Nav() {
 
           {/* 白天/夜间模式切换 */}
           <div before="menu-item-before" flex="~">
-            <SwitchAppearance />
+            <SwitchAppearance __reactSsg />
           </div>
           {/* 相关链接 */}
           <div className={Styles.socialLinkIcon} before="menu-item-before">

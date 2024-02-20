@@ -6,14 +6,22 @@ import fs from 'fs-extra';
 import sirv from 'sirv';
 
 const DEFAULT_PORT = 4173;
+export interface CLIServeOption {
+  base?: string;
+  root?: string;
+  port?: number;
+  host?: string;
+}
 
-export async function preview(root: string, { port }: { port?: number }) {
+export async function preview(root: string, cliOptions: CLIServeOption) {
   const config = await resolveConfig(root, 'serve', 'production');
-  const listenPort = port ?? DEFAULT_PORT;
+  const listenPort = cliOptions.port ?? DEFAULT_PORT;
+  const host = cliOptions.host ?? 'localhost';
   const outputDir = path.resolve(root, 'build');
   const notFoundPage = fs.readFileSync(path.resolve(outputDir, '404.html'), 'utf-8');
+  const base = config.base?.replace(/^\//, '').replace(/\/$/, '') || '';
   const compress = compression();
-  console.log(outputDir);
+
   const serve = sirv(outputDir, {
     etag: true,
     maxAge: 31536000,
@@ -30,12 +38,19 @@ export async function preview(root: string, { port }: { port?: number }) {
     res.end(notFoundPage);
   };
 
-  polka({ onNoMatch })
-    .use(compress, serve)
-    .listen(listenPort, (err) => {
-      if (err) {
-        throw err;
-      }
-      console.log(`> Preview server is running at http://localhost:${listenPort}`);
-    });
+  if (base) {
+    polka({ onNoMatch })
+      .use(base, serve, compression)
+      .listen(listenPort, host, (err: Error) => {
+        if (err) throw err;
+        console.log(`Built site served at http://${host}:${listenPort}/${base}/\n`);
+      });
+  } else {
+    polka({ onNoMatch })
+      .use(compress, serve)
+      .listen(listenPort, host, (err: Error) => {
+        if (err) throw err;
+        console.log(`Built site served at http://${host}:${listenPort}/\n`);
+      });
+  }
 }
